@@ -94,8 +94,12 @@ RUN git clone -b $PHP_VERSION --depth 1 git://github.com/php/php-src /usr/local/
     && make install \
     && make clean
 
-RUN apk del \
-		.build-deps \
-		.persistent-deps \
-		.fetch-deps \
-	&& rm -rf /var/cache/apk/*
+RUN cp /usr/local/etc/php-fpm.conf.default /usr/local/etc/php-fpm.conf \
+    && cp /usr/local/src/php/php.ini-production /usr/local/php/php.ini \
+    && mkdir -p "$DIR_WWW" \
+    && echo "<?php phpinfo();" > /var/www/phpinfo.php \
+    && rm -rf /var/cache/apk/* \
+	&& rm -rf /usr/local/src/*
+
+EXPOSE 9000
+CMD ["php-fpm"]
