@@ -102,4 +102,5 @@ RUN cp /usr/local/etc/php-fpm.conf.default /usr/local/etc/php-fpm.conf \
 	&& rm -rf /usr/local/src/*
 
 EXPOSE 9000
+
 CMD ["php-fpm"]
