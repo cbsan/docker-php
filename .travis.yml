@@ -13,5 +13,6 @@ script:
   - ./script/docker-build.sh
 
 after_success:
+  - chmod a+x ./script/*
   - ./script/docker-pull.sh
   
