@@ -5,6 +5,9 @@ sudo: required
 services:
   - docker
 
+install:
+  - git clone --depth=50 --branch=php5.6 https://github.com/cbsan/docker-php.git cbsan/docker-php
+
 script:
   - chmod a+x ./script/*
   - ./script/docker-build.sh
