@@ -9,10 +9,9 @@ install:
   - git clone --depth=50 --branch=master https://github.com/cbsan/docker-php.git cbsan/docker-php
 
 script:
-  - chmod a+x ./script/*
-  - ./script/docker-build.sh
+  - docker build -t cbsan/php .
 
 after_success:
-  - chmod a+x ./script/*
-  - ./script/docker-pull.sh
+  - docker login -u="$DOCKER_USER" -p="$DOCKER_PASS" -e="$DOCKER_EMAIL"
+  - docker push cbsan/php
   
