@@ -6,9 +6,9 @@ services:
   - docker
 
 script:
-  - docker build -t cbsan/php:5.6 .
+  - chmod a+x ./script/*
+  - ./script/docker-build.sh
 
 after_success:
-  - docker login -u="$DOCKER_USER" -p="$DOCKER_PASS" -e="$DOCKER_EMAIL";
-  - docker push cbsan/php:5.6;
+  - ./script/docker-pull.sh
   

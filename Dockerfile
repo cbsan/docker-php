@@ -94,45 +94,38 @@ RUN git clone -b $PHP_VERSION --depth 1 git://github.com/php/php-src /usr/local/
     && make install \
     && make clean
 
-RUN cp /usr/local/src/php/php.ini-production /usr/local/php/php.ini \
-    && mkdir -p "$DIR_WWW" \
-    && echo "<?php phpinfo();" > /var/www/phpinfo.php \
-    && rm -rf /var/cache/apk/* \
-	&& rm -rf /usr/local/src/*
-
 RUN set -ex \
-    && cd /usr/local/etc \
-    && if [ -d php-fpm.d ]; then \
-        sed 's!=NONE/!=!g' php-fpm.conf.default | tee php-fpm.conf > /dev/null; \
-        cp php-fpm.d/www.conf.default php-fpm.d/www.conf; \
-    else \
-        mkdir php-fpm.d; \
-        cp php-fpm.conf.default php-fpm.d/www.conf; \
-        { \
+    && mkdir -p "$DIR_WWW" \
+    && mkdir -p mkdir /usr/local/etc/php-fpm.d \
+    && echo "<?php phpinfo();" > /var/www/phpinfo.php \
+    && cp /usr/local/src/php/php.ini-production /usr/local/php/php.ini \
+    && cp /usr/local/etc/php-fpm.conf.default /usr/local/etc/php-fpm.d/www.conf \
+    && { \
             echo '[global]'; \
             echo 'include=etc/php-fpm.d/*.conf'; \
-        } | tee php-fpm.conf; \
-    fi \
+        } > /usr/local/etc/php-fpm.conf \
     && { \
-        echo '[global]'; \
-        echo 'error_log = /proc/self/fd/2'; \
-        echo; \
-        echo '[www]'; \
-        echo '; if we send this to /proc/self/fd/1, it never appears'; \
-        echo 'access.log = /proc/self/fd/2'; \
-        echo; \
-        echo 'clear_env = no'; \
-        echo; \
-        echo '; Ensure worker stdout and stderr are sent to the main error log.'; \
-        echo 'catch_workers_output = yes'; \
-    } | tee php-fpm.d/docker.conf \
+            echo '[global]'; \
+            echo 'error_log = /proc/self/fd/2'; \
+            echo; \
+            echo '[www]'; \
+            echo '; if we send this to /proc/self/fd/1, it never appears'; \
+            echo 'access.log = /proc/self/fd/2'; \
+            echo; \
+            echo 'clear_env = no'; \
+            echo; \
+            echo '; Ensure worker stdout and stderr are sent to the main error log.'; \
+            echo 'catch_workers_output = yes'; \
+        } > /usr/local/etc/php-fpm.d/log.conf \
     && { \
-        echo '[global]'; \
-        echo 'daemonize = no'; \
-        echo; \
-        echo '[www]'; \
-        echo 'listen = [::]:9000'; \
-    } | tee php-fpm.d/zz-docker.conf
+            echo '[global]'; \
+            echo 'daemonize = no'; \
+            echo; \
+            echo '[www]'; \
+            echo 'listen = [::]:9000'; \
+        } > /usr/local/etc/php-fpm.d/fpm.conf \
+    && rm -rf /var/cache/apk/* \
+    && rm -rf /usr/local/src/*
 
 EXPOSE 9000
 
