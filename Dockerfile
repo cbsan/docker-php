@@ -128,5 +128,4 @@ RUN set -ex \
     && rm -rf /usr/local/src/*
 
 EXPOSE 9000
-
 CMD ["php-fpm"]
