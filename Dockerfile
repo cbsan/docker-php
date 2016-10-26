@@ -116,14 +116,14 @@ RUN set -ex \
             echo; \
             echo '; Ensure worker stdout and stderr are sent to the main error log.'; \
             echo 'catch_workers_output = yes'; \
-        } > /usr/local/etc/php-fpm.d/log.conf \
+        } > /usr/local/etc/php-fpm.d/docker.conf \
     && { \
             echo '[global]'; \
             echo 'daemonize = no'; \
             echo; \
             echo '[www]'; \
             echo 'listen = [::]:9000'; \
-        } > /usr/local/etc/php-fpm.d/fpm.conf \
+        } > /usr/local/etc/php-fpm.d/zz-docker.conf \
     && rm -rf /var/cache/apk/* \
     && rm -rf /usr/local/src/*
 
