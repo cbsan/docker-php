@@ -53,9 +53,8 @@ RUN apk add --no-cache --virtual .build-deps \
 		sqlite-dev \
 		icu-dev
 
-COPY "$BISON_VERSION.tar.gz" /usr/local/src
-
-RUN cd /usr/local/src \
+RUN curl -fSL https://ftp.gnu.org/gnu/bison/"$BISON_VERSION.tar.gz" -o /usr/local/src/"$BISON_VERSION.tar.gz" \
+    && cd /usr/local/src \
     && tar -xzf "$BISON_VERSION.tar.gz" \
     && cd /usr/local/src/"$BISON_VERSION" \
     && ./configure --prefix=/usr \
