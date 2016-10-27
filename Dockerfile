@@ -8,9 +8,11 @@ LABEL name="Server PHP 5.6.27"
 
 
 RUN git clone https://github.com/cbsan/sdk-sqlanywhere-php.git /usr/local/src/sdk-sqlanywhere-php \
+	&& mkdir -p /opt/sqlanywhere16 \
 	&& cd /usr/local/src/sdk-sqlanywhere-php \
 	&& phpize \
-	&& ./configure \
+	&& ./configure --with-sqlanywhere \
 	&& make -j"$(nproc)" \
 	&& make install \
-	&& make clean
+	&& make clean \
+	&& echo "extension=sqlanywhere.so" > /usr/local/etc/php/php.ini
