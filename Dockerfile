@@ -88,7 +88,6 @@ RUN git clone -b $PHP_VERSION --depth 1 git://github.com/php/php-src /usr/local/
     --with-libedit \
     --with-curl \
     --with-config-file-path=/usr/local/etc/php \
-    --with-sqlanywhere=/etc/opt/sqlanywhere16 \
     && make -j"$(nproc)" \
     && make install \
     && make clean
