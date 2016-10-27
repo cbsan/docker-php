@@ -15,4 +15,6 @@ RUN git clone https://github.com/cbsan/sdk-sqlanywhere-php.git /usr/local/src/sd
 	&& make -j"$(nproc)" \
 	&& make install \
 	&& make clean \
-	&& echo "extension=sqlanywhere.so" > /usr/local/etc/php/php.ini
+	&& echo "extension=sqlanywhere.so" >> /usr/local/etc/php/php.ini
+
+ENV LD_LIBRARY_PATH=/opt/sqlanywhere16/lib64
