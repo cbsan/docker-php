@@ -97,7 +97,7 @@ RUN set -ex \
     && mkdir -p "$DIR_WWW" \
     && mkdir -p mkdir /usr/local/etc/php-fpm.d \
     && echo "<?php phpinfo();" > /var/www/phpinfo.php \
-    && cp /usr/local/src/php/php.ini-production /usr/local/php/php.ini \
+    && cp /usr/local/src/php/php.ini-production /usr/local/etc/php/php.ini \
     && cp /usr/local/etc/php-fpm.conf.default /usr/local/etc/php-fpm.d/www.conf \
     && { \
             echo '[global]'; \
