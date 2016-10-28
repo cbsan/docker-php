@@ -20,7 +20,7 @@ ENV PHP_DEPS \
         pkg-config \
         re2c
 
-ENV BUILD_LIB \
+ENV PHP_BUILD_LIB \
         libcurl4-openssl-dev \
         libedit-dev \
         libsqlite3-dev \
@@ -35,7 +35,7 @@ ENV BUILD_LIB \
 RUN apt-get update \
     && apt-get install -y \
         $PHP_DEPS \
-        $BUILD_LIB \
+        $PHP_BUILD_LIB \
         ca-certificates \
         curl \
         libedit2 \
@@ -118,7 +118,7 @@ RUN set -ex \
             echo 'listen = [::]:9000'; \
         } > /usr/local/etc/php-fpm.d/zz-docker.conf \
     && rm -rf /usr/local/src/* \
-    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false $BUILD_LIB
+    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false $PHP_BUILD_LIB
 
 EXPOSE 9000
 
