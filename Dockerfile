@@ -41,7 +41,10 @@ RUN apt-get install -y \
         libsqlite3-dev \
         libssl-dev \
         libxml2-dev \
-        bzip2 \
+        libbz2-dev \
+        libicu-dev \
+        libmcrypt-dev \
+        libxslt-dev \
         git \
     --no-install-recommends
 
@@ -79,7 +82,7 @@ RUN git clone -b $PHP_VERSION --depth 1 git://github.com/php/php-src /usr/local/
     --with-mcrypt \
     --with-libedit \
     --with-curl \
-    --with-config-file-path=/usr/local/etc/php \
+    --with-config-file-path=$DIR_PHP \
     && make -j"$(nproc)" \
     && make install \
     && make clean
@@ -98,7 +101,7 @@ RUN set -ex \
             echo '[global]'; \
             echo 'error_log = /proc/self/fd/2'; \
             echo; \
-            echo '[www]'; \
+            echo '[www]'; \libbz2-dev
             echo '; if we send this to /proc/self/fd/1, it never appears'; \
             echo 'access.log = /proc/self/fd/2'; \
             echo; \
