@@ -20,22 +20,7 @@ ENV PHP_DEPS \
         pkg-config \
         re2c
 
-RUN apt-get update \
-    && apt-get install -y \
-            $PHPIZE_DEPS \
-            ca-certificates \
-            curl \
-            libedit2 \
-            libsqlite3-0 \
-            libxml2 \
-            xz-utils \
-    --no-install-recommends
-
-RUN mkdir -p /usr/local/src/php \
-    && mkdir -p "$DIR_PHP"/conf.d
-
-RUN apt-get install -y \
-        $PHP_DEPS \
+ENV BUILD_LIB \
         libcurl4-openssl-dev \
         libedit-dev \
         libsqlite3-dev \
@@ -45,8 +30,27 @@ RUN apt-get install -y \
         libicu-dev \
         libmcrypt-dev \
         libxslt-dev \
-        git \
-    --no-install-recommends
+        git
+
+RUN apt-get update \
+    && apt-get install -y \
+        $PHP_DEPS \
+        ca-certificates \
+        curl \
+        libedit2 \
+        libsqlite3-0 \
+        libxml2 \
+        xz-utils \
+    --no-install-recommends \
+    && rm -r /var/lib/apt/lists/*
+
+RUN mkdir -p /usr/local/src/php \
+    && mkdir -p "$DIR_PHP"/conf.d
+
+RUN apt-get install -y \
+        $BUILD_LIB \
+    --no-install-recommends \
+    && rm -r /var/lib/apt/lists/*
 
 RUN curl -fSL https://ftp.gnu.org/gnu/bison/"$BISON_VERSION.tar.gz" -o /usr/local/src/"$BISON_VERSION.tar.gz" \
     && cd /usr/local/src \
@@ -117,8 +121,8 @@ RUN set -ex \
             echo '[www]'; \
             echo 'listen = [::]:9000'; \
         } > /usr/local/etc/php-fpm.d/zz-docker.conf \
-    && rm -rf /var/lib/apt/lists/* \
-    && rm -rf /usr/local/src/*
+    && rm -rf /usr/local/src/* \
+    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false $BUILD_LIB
 
 EXPOSE 9000
 
