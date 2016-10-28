@@ -35,6 +35,7 @@ ENV BUILD_LIB \
 RUN apt-get update \
     && apt-get install -y \
         $PHP_DEPS \
+        $BUILD_LIB \
         ca-certificates \
         curl \
         libedit2 \
@@ -46,11 +47,6 @@ RUN apt-get update \
 
 RUN mkdir -p /usr/local/src/php \
     && mkdir -p "$DIR_PHP"/conf.d
-
-RUN apt-get install -y \
-        $BUILD_LIB \
-    --no-install-recommends \
-    && rm -r /var/lib/apt/lists/*
 
 RUN curl -fSL https://ftp.gnu.org/gnu/bison/"$BISON_VERSION.tar.gz" -o /usr/local/src/"$BISON_VERSION.tar.gz" \
     && cd /usr/local/src \
