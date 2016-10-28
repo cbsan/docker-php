@@ -43,9 +43,8 @@ RUN apt-get update \
         libxml2 \
         xz-utils \
     --no-install-recommends \
-    && rm -r /var/lib/apt/lists/*
-
-RUN mkdir -p /usr/local/src/php \
+    && rm -r /var/lib/apt/lists/* \
+    && mkdir -p /usr/local/src/php \
     && mkdir -p "$DIR_PHP"/conf.d
 
 RUN curl -fSL https://ftp.gnu.org/gnu/bison/"$BISON_VERSION.tar.gz" -o /usr/local/src/"$BISON_VERSION.tar.gz" \
