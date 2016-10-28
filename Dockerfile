@@ -1,8 +1,7 @@
-FROM alpine:3.4
-
+FROM debian:jessie
 MAINTAINER Cristian B. Santos <cbsan.dev@gmail.com>
 
-LABEL description="PHP5.6.27"
+LABEL description="Debian Jessie + PHP5.6.27"
 LABEL version="1.0"
 LABEL name="Server PHP 5.6.27"
 
@@ -18,40 +17,32 @@ ENV PHP_DEPS \
 		gcc \
 		libc-dev \
 		make \
-		pkgconf \
+		pkg-config \
 		re2c
 
-RUN apk add --no-cache --virtual .persistent-deps \
-		ca-certificates \
-		git \
-		wget \
-		tar \
-		gawk \
-		m4 \
-		xz \
-		libmcrypt-dev \
-		curl \
-		libxslt-dev \
-		bzip2-dev
+RUN apt-get update \
+    && apt-get install -y \
+            $PHPIZE_DEPS \
+            ca-certificates \
+            curl \
+            libedit2 \
+            libsqlite3-0 \
+            libxml2 \
+            xz-utils \
+    --no-install-recommends
 
 RUN mkdir -p /usr/local/src/php \
-	&& mkdir -p "$DIR_PHP"/conf.d \
-	&& set -x \
-	&& addgroup -g 82 -S www-data \
-	&& adduser -u 82 -D -S -G www-data www-data \
-	&& set -xe \
-	apk add --no-cache --virtual .fetch-deps \
-		gnupg \
-		openssl
+	&& mkdir -p "$DIR_PHP"/conf.d
 
-RUN apk add --no-cache --virtual .build-deps \
+RUN apt-get install -y \
 		$PHP_DEPS \
-		curl-dev \
-		libedit-dev \
-		libxml2-dev \
-		openssl-dev \
-		sqlite-dev \
-		icu-dev
+		libcurl4-openssl-dev \
+        libedit-dev \
+        libsqlite3-dev \
+        libssl-dev \
+        libxml2-dev \
+        git \
+    --no-install-recommends
 
 RUN curl -fSL https://ftp.gnu.org/gnu/bison/"$BISON_VERSION.tar.gz" -o /usr/local/src/"$BISON_VERSION.tar.gz" \
     && cd /usr/local/src \
@@ -122,8 +113,7 @@ RUN set -ex \
             echo '[www]'; \
             echo 'listen = [::]:9000'; \
         } > /usr/local/etc/php-fpm.d/zz-docker.conf \
-    && rm -rf /var/cache/apk/* \
-    && rm -rf /usr/local/src/*
+    && rm -r /var/lib/apt/lists/*
 
 EXPOSE 9000
 
