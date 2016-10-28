@@ -117,7 +117,8 @@ RUN set -ex \
             echo '[www]'; \
             echo 'listen = [::]:9000'; \
         } > /usr/local/etc/php-fpm.d/zz-docker.conf \
-    && rm -r /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /usr/local/src/*
 
 EXPOSE 9000
 
