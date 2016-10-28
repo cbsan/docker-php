@@ -41,6 +41,7 @@ RUN apt-get install -y \
         libsqlite3-dev \
         libssl-dev \
         libxml2-dev \
+        bzip2 \
         git \
     --no-install-recommends
 
