@@ -11,14 +11,14 @@ ENV DIR_PHP /usr/local/etc/php
 ENV DIR_WWW /var/www
 
 ENV PHP_DEPS \
-		autoconf \
-		file \
-		g++ \
-		gcc \
-		libc-dev \
-		make \
-		pkg-config \
-		re2c
+        autoconf \
+        file \
+        g++ \
+        gcc \
+        libc-dev \
+        make \
+        pkg-config \
+        re2c
 
 RUN apt-get update \
     && apt-get install -y \
@@ -32,11 +32,11 @@ RUN apt-get update \
     --no-install-recommends
 
 RUN mkdir -p /usr/local/src/php \
-	&& mkdir -p "$DIR_PHP"/conf.d
+    && mkdir -p "$DIR_PHP"/conf.d
 
 RUN apt-get install -y \
-		$PHP_DEPS \
-		libcurl4-openssl-dev \
+        $PHP_DEPS \
+        libcurl4-openssl-dev \
         libedit-dev \
         libsqlite3-dev \
         libssl-dev \
@@ -101,7 +101,7 @@ RUN set -ex \
             echo '[global]'; \
             echo 'error_log = /proc/self/fd/2'; \
             echo; \
-            echo '[www]'; \libbz2-dev
+            echo '[www]'; \
             echo '; if we send this to /proc/self/fd/1, it never appears'; \
             echo 'access.log = /proc/self/fd/2'; \
             echo; \
