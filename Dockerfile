@@ -16,13 +16,13 @@ RUN apt-get update && apt-get install -y  \
         curl \
         libedit2 \
         libsqlite3-0 \
-        libxml2 \
+        libmcrypt-dev \
+        libicu-dev \
         xz-utils \
         autoconf \
         file \
         g++ \
         gcc \
-        libc-dev \
         make \
         pkg-config \
         re2c \
@@ -32,12 +32,13 @@ RUN apt-get update && apt-get install -y  \
 RUN set -xe \
     && php_build="\
         libcurl4-openssl-dev \
-        libedit-dev \
         libsqlite3-dev \
+        libedit-dev \
         libssl-dev \
         libxml2-dev \
-        libicu-dev \
-        libmcrypt-dev" \
+        libxml2 \
+        libc-dev \
+        xz-utils " \
     ext_dep="\
         git " \
     && apt-get update && apt-get install -y  \
