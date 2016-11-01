@@ -85,7 +85,7 @@ RUN set -xe \
     && make install \
     && make clean \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
-        $php_build \
+        #$php_build \
         $ext_dep \
     && cp $PHP_DIR/build/php/php.ini-production $PHP_DIR/php.ini \
     && rm -Rf $PHP_DIR/build
