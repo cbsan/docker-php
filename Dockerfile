@@ -94,6 +94,7 @@ RUN set -ex \
     && mkdir -p $WORK_DIR \
     && mkdir -p mkdir /usr/local/etc/php-fpm.d \
     && echo "<?php phpinfo();" > $WORK_DIR/phpinfo.php \
+    && echo "date.timezone = America/Sao_Paulo" >> $PHP_DIR/php.ini \
     && cp /usr/local/etc/php-fpm.conf.default /usr/local/etc/php-fpm.d/www.conf \
     && { \
             echo '[global]'; \
