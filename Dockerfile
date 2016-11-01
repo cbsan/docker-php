@@ -1,4 +1,5 @@
 FROM debian:jessie
+
 MAINTAINER Cristian B. Santos <cbsan.dev@gmail.com>
 
 LABEL description="Debian Jessie + PHP5.6.27"
@@ -6,11 +7,17 @@ LABEL version="1.0"
 LABEL name="Server PHP 5.6.27"
 
 ENV PHP_VERSION PHP-5.6.27
-ENV BISON_VERSION bison-2.4
-ENV DIR_PHP /usr/local/etc/php
-ENV DIR_WWW /var/www
+ENV PHP_DIR /usr/local/etc/php
+ENV BISON_VERSION bison-2.7
+ENV WORK_DIR /var/www
 
-ENV PHP_DEPS \
+RUN apt-get update && apt-get install -y  \
+        ca-certificates \
+        curl \
+        libedit2 \
+        libsqlite3-0 \
+        libxml2 \
+        xz-utils \
         autoconf \
         file \
         g++ \
@@ -18,9 +25,12 @@ ENV PHP_DEPS \
         libc-dev \
         make \
         pkg-config \
-        re2c
+        re2c \
+    --no-install-recommends --no-install-suggests \
+    && rm -rf /var/lib/apt/lists/*
 
-ENV PHP_BUILD_LIB \
+RUN set -xe \
+    && php_build="\
         libcurl4-openssl-dev \
         libedit-dev \
         libsqlite3-dev \
@@ -29,68 +39,61 @@ ENV PHP_BUILD_LIB \
         libbz2-dev \
         libicu-dev \
         libmcrypt-dev \
-        libxslt-dev \
-        git
-
-RUN apt-get update \
-    && apt-get install -y \
-        $PHP_DEPS \
-        $PHP_BUILD_LIB \
-        ca-certificates \
-        curl \
-        libedit2 \
-        libsqlite3-0 \
-        libxml2 \
-        xz-utils \
-    --no-install-recommends \
-    && rm -r /var/lib/apt/lists/* \
-    && mkdir -p /usr/local/src/php \
-    && mkdir -p "$DIR_PHP"/conf.d
-
-RUN curl -fSL https://ftp.gnu.org/gnu/bison/"$BISON_VERSION.tar.gz" -o /usr/local/src/"$BISON_VERSION.tar.gz" \
-    && cd /usr/local/src \
-    && tar -xzf "$BISON_VERSION.tar.gz" \
-    && cd /usr/local/src/"$BISON_VERSION" \
+        libxslt-dev" \
+    ext_dep="\
+        git " \
+    && apt-get update && apt-get install -y  \
+        $php_build \
+        $ext_dep \
+    --no-install-recommends --no-install-suggests \
+    && rm -rf /var/lib/apt/lists/* \
+    && mkdir -p $PHP_DIR/build \
+    && mkdir -p $PHP_DIR/conf.d \
+    && curl -fSL https://ftp.gnu.org/gnu/bison/$BISON_VERSION.tar.gz -o $PHP_DIR/build/$BISON_VERSION.tar.gz \
+    && cd $PHP_DIR/build \
+    && tar -xzf $BISON_VERSION.tar.gz \
+    && cd $PHP_DIR/build/$BISON_VERSION \
     && ./configure --prefix=/usr \
     && make -j"$(nproc)" \
     && make install \
     && make clean \
-    && rm -Rf /usr/local/src/"$BISON_VERSION.tar.gz" \
-    && cd /usr/local/src \
-    && rm -Rf /usr/local/src/"$BISON_VERSION"
-
-RUN git clone -b $PHP_VERSION --depth 1 git://github.com/php/php-src /usr/local/src/php \
-    && cd /usr/local/src/php \
+    && git clone -b $PHP_VERSION --depth 1 git://github.com/php/php-src $PHP_DIR/build/php \
+    && cd $PHP_DIR/build/php \
     && ./buildconf --force \
     && ./configure \
-    --disable-cgi \
-    --disable-short-tags \
-    --enable-fpm \
-    --enable-pcntl \
-    --enable-bcmath \
-    --enable-mbstring \
-    --enable-cli \
-    --enable-intl \
-    --enable-mysqlnd \
-    --with-fpm-user=www-data \
-    --with-fpm-group=www-data \
-    --with-zlib \
-    --with-bz2 \
-    --with-openssl \
-    --with-xsl \
-    --with-mcrypt \
-    --with-libedit \
-    --with-curl \
-    --with-config-file-path=$DIR_PHP \
+        --disable-cgi \
+        --disable-short-tags \
+        --enable-fpm \
+        --enable-pcntl \
+        --enable-bcmath \
+        --enable-mbstring \
+        --enable-cli \
+        --enable-intl \
+        --enable-mysqlnd \
+        --with-fpm-user=www-data \
+        --with-fpm-group=www-data \
+        --with-zlib \
+        --with-bz2 \
+        --with-openssl \
+        --with-xsl \
+        --with-mcrypt \
+        --with-libedit \
+        --with-curl \
+        --with-config-file-path=$PHP_DIR \
+        --with-config-file-scan-dir=$PHP_DIR/conf.d \
     && make -j"$(nproc)" \
     && make install \
-    && make clean
+    && make clean \
+    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+        $php_build \
+        $ext_dep \
+    && cp $PHP_DIR/build/php/php.ini-production $PHP_DIR/php.ini \
+    && rm -Rf $PHP_DIR/build
 
 RUN set -ex \
-    && mkdir -p "$DIR_WWW" \
+    && mkdir -p $WORK_DIR \
     && mkdir -p mkdir /usr/local/etc/php-fpm.d \
-    && echo "<?php phpinfo();" > /var/www/phpinfo.php \
-    && cp /usr/local/src/php/php.ini-production /usr/local/etc/php/php.ini \
+    && echo "<?php phpinfo();" > $WORK_DIR/phpinfo.php \
     && cp /usr/local/etc/php-fpm.conf.default /usr/local/etc/php-fpm.d/www.conf \
     && { \
             echo '[global]'; \
@@ -115,9 +118,7 @@ RUN set -ex \
             echo; \
             echo '[www]'; \
             echo 'listen = [::]:9000'; \
-        } > /usr/local/etc/php-fpm.d/zz-docker.conf \
-    && rm -rf /usr/local/src/* \
-    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false $PHP_BUILD_LIB
+        } > /usr/local/etc/php-fpm.d/zz-docker.conf
 
 EXPOSE 9000
 
