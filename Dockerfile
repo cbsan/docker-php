@@ -36,10 +36,8 @@ RUN set -xe \
         libsqlite3-dev \
         libssl-dev \
         libxml2-dev \
-        libbz2-dev \
         libicu-dev \
-        libmcrypt-dev \
-        libxslt-dev" \
+        libmcrypt-dev" \
     ext_dep="\
         git " \
     && apt-get update && apt-get install -y  \
@@ -73,9 +71,7 @@ RUN set -xe \
         --with-fpm-user=www-data \
         --with-fpm-group=www-data \
         --with-zlib \
-        --with-bz2 \
         --with-openssl \
-        --with-xsl \
         --with-mcrypt \
         --with-libedit \
         --with-curl \
@@ -85,7 +81,7 @@ RUN set -xe \
     && make install \
     && make clean \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
-        #$php_build \
+        $php_build \
         $ext_dep \
     && cp $PHP_DIR/build/php/php.ini-production $PHP_DIR/php.ini \
     && rm -Rf $PHP_DIR/build
