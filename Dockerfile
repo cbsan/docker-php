@@ -16,9 +16,9 @@ RUN apt-get update && apt-get install -y  \
         curl \
         libedit2 \
         libsqlite3-0 \
-        libmcrypt-dev \
-        libicu-dev \
-        xz-utils \
+        libmcrypt4 \
+        libxml2 \
+        libicu52 \
         autoconf \
         file \
         g++ \
@@ -34,10 +34,11 @@ RUN set -xe \
         libcurl4-openssl-dev \
         libsqlite3-dev \
         libedit-dev \
+        libmcrypt-dev \
         libssl-dev \
         libxml2-dev \
-        libxml2 \
         libc-dev \
+        libicu-dev \
         xz-utils " \
     ext_dep="\
         git " \
