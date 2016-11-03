@@ -121,4 +121,4 @@ RUN set -ex \
 
 EXPOSE 9000
 
-CMD ["php-fpm"]
+CMD ["php-fpm -D"]
