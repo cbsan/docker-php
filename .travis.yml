@@ -3,15 +3,17 @@ language: bash
 sudo: required
 
 services:
-  - docker
+    - docker
+
+env:
+    - VERSION=5.6-alpine
 
 install:
-  - git clone --depth=50 --branch=master https://github.com/cbsan/docker-php.git cbsan/docker-php
+    - git clone --depth=50 --branch=php${VERSION} https://github.com/cbsan/docker-php.git cbsan/docker-php
 
 script:
-  - docker build -t cbsan/php:5.6-alpine .
+    - docker build -t cbsan/php:${VERSION} .
 
 after_success:
-  - docker login -u="$DOCKER_USER" -p="$DOCKER_PASS" -e="$DOCKER_EMAIL"
-  - docker push cbsan/php:5.6-alpine
-  
+    - docker login -u="$DOCKER_USER" -p="$DOCKER_PASS" -e="$DOCKER_EMAIL"
+    - docker push cbsan/php:${VERSION}
