@@ -1,89 +1,93 @@
-FROM alpine:3.4
+FROM debian:jessie
 
 MAINTAINER Cristian B. Santos <cbsan.dev@gmail.com>
 
-LABEL description="PHP7.0"
+LABEL description="Debian Jessie + PHP 7.0"
 LABEL name="Server PHP 7.0"
 
 ENV PHP_VERSION PHP-7.0
-ENV DIR_PHP /usr/local/etc/php
-ENV DIR_WWW /var/www
+ENV PHP_DIR /usr/local/etc/php
+ENV WORK_DIR /var/www
 
-ENV PHP_DEPS \
-		autoconf \
-		file \
-		g++ \
-		gcc \
-		libc-dev \
-		make \
-		pkgconf \
-		re2c \
-        bison
+RUN apt-get update && apt-get install -y  \
+        ca-certificates \
+        curl \
+        libedit2 \
+        libsqlite3-0 \
+        libmcrypt4 \
+        libxml2 \
+        libicu52 \
+        autoconf \
+        file \
+        g++ \
+        gcc \
+        make \
+        pkg-config \
+        re2c \
+    --no-install-recommends --no-install-suggests \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN apk add --no-cache --virtual .persistent-deps \
-		ca-certificates \
-		git \
-		wget \
-		tar \
-		gawk \
-		m4 \
-		xz \
-		libmcrypt-dev \
-		curl \
-		libxslt-dev \
-		bzip2-dev
-
-RUN mkdir -p /usr/local/src/php \
-	&& mkdir -p "$DIR_PHP"/conf.d \
-	&& set -x \
-	&& addgroup -g 82 -S www-data \
-	&& adduser -u 82 -D -S -G www-data www-data \
-	&& set -xe \
-	apk add --no-cache --virtual .fetch-deps \
-		gnupg \
-		openssl
-
-RUN apk add --no-cache --virtual .build-deps \
-		$PHP_DEPS \
-		curl-dev \
-		libedit-dev \
-		libxml2-dev \
-		openssl-dev \
-		sqlite-dev \
-		icu-dev
-
-RUN git clone -b $PHP_VERSION --depth 1 git://github.com/php/php-src /usr/local/src/php \
-    && cd /usr/local/src/php \
-    && ./buildconf --force \
-    && ./configure \
-    --disable-cgi \
-    --disable-short-tags \
-    --enable-fpm \
-    --enable-pcntl \
-    --enable-bcmath \
-    --enable-mbstring \
-    --enable-cli \
-    --enable-intl \
-    --enable-mysqlnd \
-    --with-fpm-user=www-data \
-    --with-fpm-group=www-data \
-    --with-zlib \
-    --with-bz2 \
-    --with-openssl \
-    --with-xsl \
-    --with-mcrypt \
-    --with-libedit \
-    --with-curl \
-    --with-config-file-path=/usr/local/etc/php \
+RUN set -xe \
+    && php_build="\
+        libcurl4-openssl-dev \
+        libsqlite3-dev \
+        libedit-dev \
+        libmcrypt-dev \
+        libssl-dev \
+        libxml2-dev \
+        libc-dev \
+        libicu-dev \
+        xz-utils " \
+    ext_dep="\
+        git \
+        bison " \
+    && apt-get update && apt-get install -y  \
+        $php_build \
+        $ext_dep \
+    --no-install-recommends --no-install-suggests \
+    && rm -rf /var/lib/apt/lists/* \
+    && mkdir -p $PHP_DIR/build \
+    && mkdir -p $PHP_DIR/conf.d \
+    && ./configure --prefix=/usr \
     && make -j"$(nproc)" \
     && make install \
-    && make clean
+    && make clean \
+    && git clone -b $PHP_VERSION --depth 1 git://github.com/php/php-src $PHP_DIR/build/php \
+    && cd $PHP_DIR/build/php \
+    && ./buildconf --force \
+    && ./configure \
+        --disable-cgi \
+        --disable-short-tags \
+        --enable-fpm \
+        --enable-pcntl \
+        --enable-bcmath \
+        --enable-mbstring \
+        --enable-cli \
+        --enable-intl \
+        --enable-mysqlnd \
+        --with-fpm-user=www-data \
+        --with-fpm-group=www-data \
+        --with-zlib \
+        --with-openssl \
+        --with-mcrypt \
+        --with-libedit \
+        --with-curl \
+        --with-config-file-path=$PHP_DIR \
+        --with-config-file-scan-dir=$PHP_DIR/conf.d \
+    && make -j"$(nproc)" \
+    && make install \
+    && make clean \
+    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+        $php_build \
+        $ext_dep \
+    && cp $PHP_DIR/build/php/php.ini-production $PHP_DIR/php.ini \
+    && rm -Rf $PHP_DIR/build
 
 RUN set -ex \
-    && mkdir -p "$DIR_WWW" \
+    && mkdir -p $WORK_DIR \
     && mkdir -p mkdir /usr/local/etc/php-fpm.d \
-    && echo "<?php phpinfo();" > /var/www/phpinfo.php \
-    && cp /usr/local/src/php/php.ini-production /usr/local/php/php.ini \
+    && echo "<?php phpinfo();" > $WORK_DIR/phpinfo.php \
+    && echo "date.timezone = America/Sao_Paulo" >> $PHP_DIR/php.ini \
     && cp /usr/local/etc/php-fpm.conf.default /usr/local/etc/php-fpm.d/www.conf \
     && { \
             echo '[global]'; \
@@ -108,9 +112,7 @@ RUN set -ex \
             echo; \
             echo '[www]'; \
             echo 'listen = [::]:9000'; \
-        } > /usr/local/etc/php-fpm.d/zz-docker.conf \
-    && rm -rf /var/cache/apk/* \
-    && rm -rf /usr/local/src/*
+        } > /usr/local/etc/php-fpm.d/zz-docker.conf
 
 EXPOSE 9000
 
