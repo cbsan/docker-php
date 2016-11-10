@@ -48,10 +48,6 @@ RUN set -xe \
     && rm -rf /var/lib/apt/lists/* \
     && mkdir -p $PHP_DIR/build \
     && mkdir -p $PHP_DIR/conf.d \
-    && ./configure --prefix=/usr \
-    && make -j"$(nproc)" \
-    && make install \
-    && make clean \
     && git clone -b $PHP_VERSION --depth 1 git://github.com/php/php-src $PHP_DIR/build/php \
     && cd $PHP_DIR/build/php \
     && ./buildconf --force \
