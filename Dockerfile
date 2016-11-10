@@ -2,10 +2,10 @@ FROM debian:jessie
 
 MAINTAINER Cristian B. Santos <cbsan.dev@gmail.com>
 
-LABEL description="Debian Jessie + PHP 7.0"
-LABEL name="Server PHP 7.0"
+LABEL description="Debian Jessie + PHP 7.1.0"
+LABEL name="Server PHP 7.1.0"
 
-ENV PHP_VERSION PHP-7.0
+ENV PHP_VERSION PHP-7.1.0
 ENV PHP_DIR /usr/local/etc/php
 ENV WORK_DIR /var/www
 
