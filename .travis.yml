@@ -6,7 +6,7 @@ services:
   - docker
 
 env:
-    - VERSION=7.0
+    - VERSION=7.0-alpine
 
 install:
     - git clone --depth=50 --branch=php${VERSION} https://github.com/cbsan/docker-php.git cbsan/docker-php
