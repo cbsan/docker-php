@@ -2,12 +2,10 @@ FROM alpine:3.4
 
 MAINTAINER Cristian B. Santos <cbsan.dev@gmail.com>
 
-LABEL description="PHP5.6.27"
-LABEL version="1.0"
-LABEL name="Server PHP 5.6.27"
+LABEL description="PHP7.0"
+LABEL name="Server PHP 7.0"
 
-ENV PHP_VERSION PHP-5.6.27
-ENV BISON_VERSION bison-2.4
+ENV PHP_VERSION PHP-7.0
 ENV DIR_PHP /usr/local/etc/php
 ENV DIR_WWW /var/www
 
@@ -19,7 +17,8 @@ ENV PHP_DEPS \
 		libc-dev \
 		make \
 		pkgconf \
-		re2c
+		re2c \
+        bison
 
 RUN apk add --no-cache --virtual .persistent-deps \
 		ca-certificates \
@@ -52,18 +51,6 @@ RUN apk add --no-cache --virtual .build-deps \
 		openssl-dev \
 		sqlite-dev \
 		icu-dev
-
-RUN curl -fSL https://ftp.gnu.org/gnu/bison/"$BISON_VERSION.tar.gz" -o /usr/local/src/"$BISON_VERSION.tar.gz" \
-    && cd /usr/local/src \
-    && tar -xzf "$BISON_VERSION.tar.gz" \
-    && cd /usr/local/src/"$BISON_VERSION" \
-    && ./configure --prefix=/usr \
-    && make -j"$(nproc)" \
-    && make install \
-    && make clean \
-    && rm -Rf /usr/local/src/"$BISON_VERSION.tar.gz" \
-    && cd /usr/local/src \
-    && rm -Rf /usr/local/src/"$BISON_VERSION"
 
 RUN git clone -b $PHP_VERSION --depth 1 git://github.com/php/php-src /usr/local/src/php \
     && cd /usr/local/src/php \
