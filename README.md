@@ -10,6 +10,7 @@ Supported tags
 -------------
 
  - lastest [![Build Status](https://travis-ci.org/cbsan/docker-php.svg?branch=master)](https://travis-ci.org/cbsan/docker-php)
+ [![](https://images.microbadger.com/badges/image/cbsan/php:7.1.svg)](https://microbadger.com/images/cbsan/php:7.1 "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/version/cbsan/php:7.1.svg)](https://microbadger.com/images/cbsan/php:7.1 "Get your own version badge on microbadger.com")
 
 ### Using container
 
