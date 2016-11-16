@@ -9,7 +9,7 @@ Container Docker to run PHP!
 Supported tags
 -------------
 
- - 5.6-sybase16 [![Build Status](https://travis-ci.org/cbsan/docker-php.svg?branch=php5.6-sybase16)](https://travis-ci.org/cbsan/docker-php)
+ - 5.6-sybase16 [![Build Status](https://travis-ci.org/cbsan/docker-php.svg?branch=php5.6-sybase16)](https://travis-ci.org/cbsan/docker-php) [![](https://images.microbadger.com/badges/image/cbsan/php:5.6-sybase16.svg)](https://microbadger.com/images/cbsan/php:5.6-sybase16 "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/version/cbsan/php:5.6-sybase16.svg)](https://microbadger.com/images/cbsan/php:5.6-sybase16 "Get your own version badge on microbadger.com")
 
 ### Using container
 
