@@ -9,7 +9,7 @@ Container Docker to run PHP!
 Supported tags
 -------------
 
- - 5.6-alpine [![](https://images.microbadger.com/badges/version/cbsan/php:5.6-alpine.svg)](https://microbadger.com/images/cbsan/php:5.6-alpine) [![Build Status](https://travis-ci.org/cbsan/docker-php.svg?branch=php5.6-alpine)](https://travis-ci.org/cbsan/docker-php) [![](https://images.microbadger.com/badges/image/cbsan/php:5.6-alpine.svg)](https://microbadger.com/images/cbsan/php:5.6-alpine)
+ - 5.6-alpine [![Build Status](https://travis-ci.org/cbsan/docker-php.svg?branch=php5.6-alpine)](https://travis-ci.org/cbsan/docker-php) [![](https://images.microbadger.com/badges/image/cbsan/php:5.6-alpine.svg)](https://microbadger.com/images/cbsan/php:5.6-alpine) [![](https://images.microbadger.com/badges/version/cbsan/php:5.6-alpine.svg)](https://microbadger.com/images/cbsan/php:5.6-alpine)
 
 ### Using container
 
