@@ -9,7 +9,7 @@ Container Docker to run PHP!
 Supported tags
 -------------
 
- - lastest [![Build Status](https://travis-ci.org/cbsan/docker-php.svg?branch=master)](https://travis-ci.org/cbsan/docker-php)
+ - lastest [![Build Status](https://travis-ci.org/cbsan/docker-php.svg?branch=master)](https://travis-ci.org/cbsan/docker-php)[![](https://images.microbadger.com/badges/image/cbsan/php.svg)](https://microbadger.com/images/cbsan/php)
 
 ### Using container
 
