@@ -29,3 +29,5 @@ RUN set -xe \
 	&& apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
 		$dep_lib \
 	&& rm -Rf /usr/local/src/*
+
+WORKDIR /var/www
