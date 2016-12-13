@@ -119,6 +119,8 @@ RUN set -ex \
             echo 'listen = [::]:9000'; \
         } > /usr/local/etc/php-fpm.d/zz-docker.conf
 
+WORKDIR $WORK_DIR
+
 EXPOSE 9000
 
 CMD ["php-fpm"]
