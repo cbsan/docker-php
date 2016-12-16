@@ -27,6 +27,7 @@ RUN apt-get update && apt-get install -y  \
         gcc \
         make \
         pkg-config \
+        unzip \
         re2c \
     --no-install-recommends --no-install-suggests \
     && rm -rf /var/lib/apt/lists/*
@@ -79,6 +80,7 @@ RUN set -xe \
         --with-openssl \
         --with-mcrypt \
         --with-libedit \
+        --with-libzip \
         --with-curl \
         --with-config-file-path=$PHP_DIR \
         --with-config-file-scan-dir=$PHP_DIR/conf.d \
