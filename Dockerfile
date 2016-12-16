@@ -1,4 +1,4 @@
-FROM cbsan:php
+FROM debian:jessie
 
 MAINTAINER Cristian B. Santos <cbsan.dev@gmail.com>
 
