@@ -19,6 +19,8 @@ RUN apt-get update && apt-get install -y  \
         libmcrypt4 \
         libxml2 \
         libicu52 \
+        libgd2-xpm-dev \
+        libgd-tools \
         autoconf \
         file \
         g++ \
@@ -73,6 +75,7 @@ RUN set -xe \
         --with-fpm-user=www-data \
         --with-fpm-group=www-data \
         --with-zlib \
+        --with-gd \
         --with-openssl \
         --with-mcrypt \
         --with-libedit \
