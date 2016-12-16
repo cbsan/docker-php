@@ -1,7 +1,8 @@
 FROM cbsan/php:5.6
 
 RUN set -xe \
-    && ext_dep="curl" \
+    && ext_dep="curl \
+                git" \
     && apt-get update && apt-get install -y  \
         $ext_dep \
     --no-install-recommends --no-install-suggests \
