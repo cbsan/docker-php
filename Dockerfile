@@ -73,10 +73,12 @@ RUN set -xe \
         --enable-cli \
         --enable-intl \
         --enable-mysqlnd \
+        --enable-soap \
         --with-fpm-user=www-data \
         --with-fpm-group=www-data \
         --with-zlib \
         --with-gd \
+        --with-pdo-mysql \
         --with-openssl \
         --with-mcrypt \
         --with-libedit \
