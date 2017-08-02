@@ -78,6 +78,8 @@ RUN set -xe \
         --with-fpm-group=www-data \
         --with-zlib \
         --with-gd \
+        --with-jpeg-dir \
+        --with-png-dir \
         --with-pdo-mysql \
         --with-openssl \
         --with-mcrypt \
