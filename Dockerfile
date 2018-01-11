@@ -18,4 +18,6 @@ RUN set -xe \
 
 ENV PATH "$PATH:/root/.composer/vendor/bin"
 
+RUN /usr/local/bin/composer self-update && echo "{}" > ~/.composer/composer.json
+
 WORKDIR /var/www
